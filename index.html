@@ -228,71 +228,74 @@ durationStart.onclick=()=>{
 
 // Fetch lesson from backend
 async function startLesson(){
-  lessonTitle.textContent=`${subject}: ${topic}`;
-  lessonContent.innerHTML="<p>Loading your personalized lesson...</p>";
+  lessonTitle.textContent = `${subject}: ${topic}`;
+  lessonContent.innerHTML = "<p>Loading your personalized lesson...</p>";
   try {
-    const res=await fetch("https://learngeneralart.onrender.com/lesson",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({subject,topic,duration})
+    const res = await fetch("https://classroomai.onrender.com/lesson", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subject, topic, duration })
     });
-    const data=await res.json();
-    lessonContent.innerHTML=`<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
+    const data = await res.json();
+    lessonContent.innerHTML = `<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
     speak("Here we go! Let's begin your lesson.");
-  }catch(err){
+  } catch(err) {
     console.error(err);
-    lessonContent.innerHTML="<p>Sorry, something went wrong fetching the lesson.</p>";
+    lessonContent.innerHTML = "<p>Sorry, something went wrong fetching the lesson.</p>";
   }
 }
 
 // Chat interaction
-chatSend.onclick=()=>{
-  const msg=chatInput.value.trim();
+chatSend.onclick = () => {
+  const msg = chatInput.value.trim();
   if(!msg) return;
-  const userP=document.createElement("p");
-  userP.textContent="🧑‍🎓 "+msg;
-  userP.style.textAlign="right";
+  const userP = document.createElement("p");
+  userP.textContent = "🧑‍🎓 " + msg;
+  userP.style.textAlign = "right";
   lessonContent.appendChild(userP);
-  chatInput.value="";
+  chatInput.value = "";
   handleStudentMessage(msg);
 };
 
 async function handleStudentMessage(msg){
-  const reply=document.createElement("p");
-  reply.style.textAlign="left";
-  reply.textContent="🤖 Thinking...";
+  const reply = document.createElement("p");
+  reply.style.textAlign = "left";
+  reply.textContent = "🤖 Thinking...";
   lessonContent.appendChild(reply);
 
   try{
-    const res=await fetch("https://learngeneralart.onrender.com/lesson",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        subject, topic,
-        duration:10,
-        extra:`Student said: ${msg}. Respond as their teacher with explanations or clarifications.`
+    const res = await fetch("https://classroomai.onrender.com/lesson", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject,
+        topic,
+        duration: 10,
+        extra: `Student said: ${msg}. Respond as their teacher with explanations or clarifications.`
       })
     });
-    const data=await res.json();
-    reply.textContent="🤖 "+data.lesson;
+    const data = await res.json();
+    reply.textContent = "🤖 " + data.lesson;
     speak(data.lesson);
-  }catch(e){
-    reply.textContent="⚠️ Sorry, I couldn't process that right now.";
+  } catch(e) {
+    reply.textContent = "⚠️ Sorry, I couldn't process that right now.";
   }
 }
 
 // Helpers
-function fade(hide,show){
+function fade(hide, show){
   hide.classList.add("hidden");
   show.classList.remove("hidden");
 }
 function speak(text){
   if('speechSynthesis' in window){
-    const utter=new SpeechSynthesisUtterance(text);
-    utter.rate=1; utter.pitch=1; utter.volume=1;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1; utter.pitch = 1; utter.volume = 1;
     speechSynthesis.speak(utter);
   }
 }
+  
 </script>
 </body>
 </html>
+
