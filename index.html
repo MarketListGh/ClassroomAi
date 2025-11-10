@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Classroom - Smart Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ====== Global ====== */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body {
+  background: linear-gradient(135deg, #3a0ca3, #7209b7, #f72585);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  transition: background 1s ease-in-out;
+}
+.hidden { display: none; }
+
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  padding: 35px 40px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+  animation: fadeIn 0.8s ease-in-out;
+}
+.popup h2 { font-size: 1.5em; margin-bottom: 20px; }
+.popup p { font-size: 1.1em; margin-bottom: 15px; }
+input, select {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1em;
+  margin-bottom: 15px;
+}
+button {
+  background: linear-gradient(90deg, #4cc9f0, #4361ee);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover { transform: scale(1.05); }
+
+/* ====== Lesson Screen ====== */
+#lesson-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #f72585, #7209b7, #3a0ca3);
+  padding: 30px;
+  animation: fadeIn 1s ease;
+}
+#lesson-title {
+  font-size: 1.8em;
+  background: linear-gradient(90deg,#4cc9f0,#4895ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+#lesson-content {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 25px;
+  color: #fff;
+  line-height: 1.6em;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+#chat-area {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+}
+#chat-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin-right: 10px;
+}
+#chat-send {
+  background: #4cc9f0;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
+</style>
+</head>
+<body>
+
+<!-- Name Popup -->
+<div id="name-popup" class="popup">
+  <h2>👋 Welcome Student!</h2>
+  <p>Enter your name to begin:</p>
+  <input type="text" id="student-name" placeholder="Your name here...">
+  <button id="start-btn">Start</button>
+</div>
+
+<!-- Subject Popup -->
+<div id="subject-popup" class="popup hidden">
+  <h2>Choose Your Subject 📚</h2>
+  <select id="subject-select">
+    <option value="">-- Select a Subject --</option>
+    <option>English Language</option>
+    <option>Mathematics</option>
+    <option>ICT</option>
+    <option>Economics</option>
+    <option>Social Studies</option>
+    <option>Government</option>
+    <option>Business Management</option>
+    <option>C.R.S</option>
+    <option>P.E.H</option>
+  </select>
+  <button id="subject-next">Next</button>
+</div>
+
+<!-- Topic Popup -->
+<div id="topic-popup" class="popup hidden">
+  <h2>Choose a Topic 🧠</h2>
+  <input type="text" id="topic-input" placeholder="e.g. Parts of Speech, Algebra, etc.">
+  <button id="topic-next">Next</button>
+</div>
+
+<!-- Duration Popup -->
+<div id="duration-popup" class="popup hidden">
+  <h2>Set Your Lesson Duration ⏱️</h2>
+  <select id="duration-select">
+    <option value="30">30 Minutes</option>
+    <option value="60">1 Hour</option>
+    <option value="90">1.5 Hours</option>
+    <option value="120">2 Hours</option>
+  </select>
+  <button id="duration-start">Start Lesson</button>
+</div>
+
+<!-- Lesson Screen -->
+<div id="lesson-screen" class="hidden">
+  <h2 id="lesson-title"></h2>
+  <div id="lesson-content"></div>
+  <div id="chat-area">
+    <input type="text" id="chat-input" placeholder="Ask or answer here...">
+    <button id="chat-send">Send</button>
+  </div>
+</div>
+
+<script>
+const namePopup=document.getElementById('name-popup');
+const subjectPopup=document.getElementById('subject-popup');
+const topicPopup=document.getElementById('topic-popup');
+const durationPopup=document.getElementById('duration-popup');
+const lessonScreen=document.getElementById('lesson-screen');
+
+const startBtn=document.getElementById('start-btn');
+const subjectNext=document.getElementById('subject-next');
+const topicNext=document.getElementById('topic-next');
+const durationStart=document.getElementById('duration-start');
+
+const subjectSelect=document.getElementById('subject-select');
+const topicInput=document.getElementById('topic-input');
+const durationSelect=document.getElementById('duration-select');
+
+const lessonTitle=document.getElementById('lesson-title');
+const lessonContent=document.getElementById('lesson-content');
+const chatInput=document.getElementById('chat-input');
+const chatSend=document.getElementById('chat-send');
+
+let studentName="", subject="", topic="", duration=30;
+
+// Popup sequence
+startBtn.onclick=()=>{
+  const name=document.getElementById('student-name').value.trim();
+  if(!name){alert("Please enter your name."); return;}
+  studentName=name;
+  speak(`Hello ${studentName}! Let's begin your learning journey.`);
+  fade(namePopup,subjectPopup);
+};
+
+subjectNext.onclick=()=>{
+  subject=subjectSelect.value;
+  if(!subject){alert("Please select a subject."); return;}
+  speak(`Good choice! ${subject} is a great subject. Now choose your topic.`);
+  fade(subjectPopup,topicPopup);
+};
+
+topicNext.onclick=()=>{
+  topic=topicInput.value.trim();
+  if(!topic){alert("Please enter a topic."); return;}
+  speak(`Great! Let's study ${topic}. How long should the lesson be?`);
+  fade(topicPopup,durationPopup);
+};
+
+durationStart.onclick=()=>{
+  duration=durationSelect.value;
+  speak(`Perfect! Starting your ${duration}-minute lesson on ${topic}.`);
+  fade(durationPopup,lessonScreen);
+  startLesson();
+};
+
+// Fetch lesson from backend
+async function startLesson(){
+  lessonTitle.textContent=`${subject}: ${topic}`;
+  lessonContent.innerHTML="<p>Loading your personalized lesson...</p>";
+  try {
+    const res=await fetch("https://learngeneralart.onrender.com/lesson",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({subject,topic,duration})
+    });
+    const data=await res.json();
+    lessonContent.innerHTML=`<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
+    speak("Here we go! Let's begin your lesson.");
+  }catch(err){
+    console.error(err);
+    lessonContent.innerHTML="<p>Sorry, something went wrong fetching the lesson.</p>";
+  }
+}
+
+// Chat interaction
+chatSend.onclick=()=>{
+  const msg=chatInput.value.trim();
+  if(!msg) return;
+  const userP=document.createElement("p");
+  userP.textContent="🧑‍🎓 "+msg;
+  userP.style.textAlign="right";
+  lessonContent.appendChild(userP);
+  chatInput.value="";
+  handleStudentMessage(msg);
+};
+
+async function handleStudentMessage(msg){
+  const reply=document.createElement("p");
+  reply.style.textAlign="left";
+  reply.textContent="🤖 Thinking...";
+  lessonContent.appendChild(reply);
+
+  try{
+    const res=await fetch("https://learngeneralart.onrender.com/lesson",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        subject, topic,
+        duration:10,
+        extra:`Student said: ${msg}. Respond as their teacher with explanations or clarifications.`
+      })
+    });
+    const data=await res.json();
+    reply.textContent="🤖 "+data.lesson;
+    speak(data.lesson);
+  }catch(e){
+    reply.textContent="⚠️ Sorry, I couldn't process that right now.";
+  }
+}
+
+// Helpers
+function fade(hide,show){
+  hide.classList.add("hidden");
+  show.classList.remove("hidden");
+}
+function speak(text){
+  if('speechSynthesis' in window){
+    const utter=new SpeechSynthesisUtterance(text);
+    utter.rate=1; utter.pitch=1; utter.volume=1;
+    speechSynthesis.speak(utter);
+  }
+}
+</script>
+</body>
+</html>
