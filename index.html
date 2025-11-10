@@ -3,123 +3,69 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Classroom - Smart Learning</title>
+<title>AI Classroom by Carter Wells</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* ====== Global ====== */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body {
-  background: linear-gradient(135deg, #3a0ca3, #7209b7, #f72585);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
-  transition: background 1s ease-in-out;
-}
-.hidden { display: none; }
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body { background: #0f172a; color:white; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; transition:background 1s; }
+.hidden { display:none; }
 
-.popup {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
-  padding: 35px 40px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 420px;
-  text-align: center;
-  box-shadow: 0 0 25px rgba(0,0,0,0.3);
-  animation: fadeIn 0.8s ease-in-out;
-}
-.popup h2 { font-size: 1.5em; margin-bottom: 20px; }
-.popup p { font-size: 1.1em; margin-bottom: 15px; }
-input, select {
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 12px;
-  border: none;
-  font-size: 1em;
-  margin-bottom: 15px;
-}
-button {
-  background: linear-gradient(90deg, #4cc9f0, #4361ee);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover { transform: scale(1.05); }
+/* ===== Splash Screen ===== */
+#splash { position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg,#4f46e5,#3b82f6); display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; font-size:2em; animation:fadeIn 1s; }
+#splash .spinner { margin-top:20px; width:50px; height:50px; border:5px solid rgba(255,255,255,0.2); border-top:5px solid #fff; border-radius:50%; animation:spin 1s linear infinite; }
 
-/* ====== Lesson Screen ====== */
-#lesson-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: left;
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  background: linear-gradient(135deg, #f72585, #7209b7, #3a0ca3);
-  padding: 30px;
-  animation: fadeIn 1s ease;
-}
-#lesson-title {
-  font-size: 1.8em;
-  background: linear-gradient(90deg,#4cc9f0,#4895ef);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-}
-#lesson-content {
-  width: 100%;
-  max-width: 800px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 25px;
-  color: #fff;
-  line-height: 1.6em;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-}
-#chat-area {
-  width: 100%;
-  max-width: 800px;
-  margin-top: 20px;
-  background: rgba(255,255,255,0.1);
-  padding: 15px;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-}
-#chat-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  margin-right: 10px;
-}
-#chat-send {
-  background: #4cc9f0;
-  border: none;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-}
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
+/* ===== Popups ===== */
+.popup { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background: rgba(255,255,255,0.1); backdrop-filter:blur(12px); padding:35px 40px; border-radius:20px; width:90%; max-width:420px; text-align:center; box-shadow:0 0 25px rgba(0,0,0,0.3); animation:fadeIn 0.8s; }
+.popup h2 { font-size:1.5em; margin-bottom:20px; }
+.popup p { font-size:1.1em; margin-bottom:15px; }
+input, select { width:100%; padding:10px 15px; border-radius:12px; border:none; font-size:1em; margin-bottom:15px; }
+button { background: linear-gradient(90deg,#4cc9f0,#4361ee); color:white; border:none; border-radius:12px; padding:12px 25px; font-weight:600; cursor:pointer; transition:0.3s; }
+button:hover { transform:scale(1.05); }
+
+/* ===== Lesson Screen ===== */
+#lesson-screen { display:flex; flex-direction:column; align-items:center; text-align:left; width:100%; height:100vh; overflow-y:auto; padding:30px; background: linear-gradient(135deg,#1e293b,#334155); position:relative; }
+#lesson-title { font-size:1.8em; background: linear-gradient(90deg,#4cc9f0,#4895ef); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
+#lesson-content { width:100%; max-width:800px; background: rgba(255,255,255,0.15); border-radius:20px; padding:25px; color:#fff; line-height:1.6em; box-shadow:0 0 20px rgba(0,0,0,0.2); }
+#chat-area { width:100%; max-width:800px; margin-top:20px; background: rgba(255,255,255,0.1); padding:15px; border-radius:15px; display:flex; align-items:center; }
+#chat-input { flex:1; padding:10px; border-radius:10px; border:none; margin-right:10px; }
+#chat-send { background:#4cc9f0; border:none; color:#fff; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer; }
+#voice-btn { background:#4895ef; margin-left:10px; padding:10px; border-radius:50%; cursor:pointer; }
+
+/* ===== Progress Bar ===== */
+#progress-container { width:100%; max-width:800px; height:20px; background:rgba(255,255,255,0.1); border-radius:10px; margin-top:15px; }
+#progress-bar { width:0%; height:100%; background:#4cc9f0; border-radius:10px; transition:0.2s; }
+
+/* ===== Floating AI Avatar ===== */
+#ai-avatar { position:fixed; bottom:30px; right:30px; width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#4cc9f0,#4895ef); display:flex; justify-content:center; align-items:center; font-size:2em; color:white; box-shadow:0 0 20px rgba(0,0,0,0.4); animation:avatarIdle 2s infinite alternate; z-index:100; }
+#ai-avatar.speaking { box-shadow:0 0 30px #4cc9f0; animation:avatarSpeak 0.5s infinite alternate; }
+
+/* ===== Lesson Summary Popup ===== */
+#summary-popup { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background: rgba(0,0,0,0.9); padding:30px; border-radius:20px; width:90%; max-width:500px; text-align:center; box-shadow:0 0 25px rgba(0,0,0,0.5); color:white; display:none; }
+#summary-popup h2 { margin-bottom:20px; }
+#summary-popup button { margin:5px; }
+
+/* ===== Particles ===== */
+.particle { position:absolute; width:5px; height:5px; background:white; border-radius:50%; opacity:0.3; animation:particleMove 10s linear infinite; }
+
+/* ===== Animations ===== */
+@keyframes fadeIn { from{opacity:0; transform:scale(0.95);} to{opacity:1; transform:scale(1);} }
+@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+@keyframes particleMove { 0%{transform:translateY(0) translateX(0);} 100%{transform:translateY(-800px) translateX(800px);} }
+@keyframes avatarIdle { 0%{transform:translateY(0);} 100%{transform:translateY(-5px);} }
+@keyframes avatarSpeak { 0%{transform:scale(1);} 100%{transform:scale(1.1);} }
 </style>
 </head>
 <body>
 
+<!-- Splash Screen -->
+<div id="splash">
+  <div>AI Classroom by Carter Wells</div>
+  <div class="spinner"></div>
+</div>
+
 <!-- Name Popup -->
-<div id="name-popup" class="popup">
+<div id="name-popup" class="popup hidden">
   <h2>👋 Welcome Student!</h2>
   <p>Enter your name to begin:</p>
   <input type="text" id="student-name" placeholder="Your name here...">
@@ -147,7 +93,7 @@ button:hover { transform: scale(1.05); }
 <!-- Topic Popup -->
 <div id="topic-popup" class="popup hidden">
   <h2>Choose a Topic 🧠</h2>
-  <input type="text" id="topic-input" placeholder="e.g. Parts of Speech, Algebra, etc.">
+  <input type="text" id="topic-input" placeholder="e.g. Algebra, Photosynthesis">
   <button id="topic-next">Next</button>
 </div>
 
@@ -167,135 +113,132 @@ button:hover { transform: scale(1.05); }
 <div id="lesson-screen" class="hidden">
   <h2 id="lesson-title"></h2>
   <div id="lesson-content"></div>
+  <div id="progress-container"><div id="progress-bar"></div></div>
   <div id="chat-area">
     <input type="text" id="chat-input" placeholder="Ask or answer here...">
     <button id="chat-send">Send</button>
+    <button id="voice-btn">🎤</button>
   </div>
 </div>
 
+<!-- Floating AI Avatar -->
+<div id="ai-avatar">🤖</div>
+
+<!-- Lesson Summary Popup -->
+<div id="summary-popup">
+  <h2>🎉 Lesson Complete!</h2>
+  <p id="summary-text"></p>
+  <button id="redo-btn">Redo Lesson</button>
+  <button id="new-btn">New Topic</button>
+  <button id="exit-btn">Exit</button>
+</div>
+
+<!-- Background Music -->
+<audio id="bg-music" loop src="https://www.bensound.com/bensound-music/bensound-sunny.mp3"></audio>
+<button id="music-toggle" style="position:fixed;bottom:10px;right:10px;padding:10px;border-radius:50%;background:#4cc9f0;color:white;">🔊</button>
+
 <script>
+/* ===== Variables ===== */
+const splash=document.getElementById('splash');
 const namePopup=document.getElementById('name-popup');
 const subjectPopup=document.getElementById('subject-popup');
 const topicPopup=document.getElementById('topic-popup');
 const durationPopup=document.getElementById('duration-popup');
 const lessonScreen=document.getElementById('lesson-screen');
-
 const startBtn=document.getElementById('start-btn');
 const subjectNext=document.getElementById('subject-next');
 const topicNext=document.getElementById('topic-next');
 const durationStart=document.getElementById('duration-start');
-
 const subjectSelect=document.getElementById('subject-select');
 const topicInput=document.getElementById('topic-input');
 const durationSelect=document.getElementById('duration-select');
-
 const lessonTitle=document.getElementById('lesson-title');
 const lessonContent=document.getElementById('lesson-content');
 const chatInput=document.getElementById('chat-input');
 const chatSend=document.getElementById('chat-send');
+const voiceBtn=document.getElementById('voice-btn');
+const progressBar=document.getElementById('progress-bar');
+const bgMusic=document.getElementById('bg-music');
+const musicToggle=document.getElementById('music-toggle');
+const aiAvatar=document.getElementById('ai-avatar');
+const summaryPopup=document.getElementById('summary-popup');
+const summaryText=document.getElementById('summary-text');
+const redoBtn=document.getElementById('redo-btn');
+const newBtn=document.getElementById('new-btn');
+const exitBtn=document.getElementById('exit-btn');
 
-let studentName="", subject="", topic="", duration=30;
+let studentName=localStorage.getItem('studentName')||'';
+let subject=localStorage.getItem('subject')||'';
+let topic=localStorage.getItem('topic')||'';
+let duration=parseInt(localStorage.getItem('duration'))||30;
+let lessonTime=0;
 
-// Popup sequence
-startBtn.onclick=()=>{
-  const name=document.getElementById('student-name').value.trim();
-  if(!name){alert("Please enter your name."); return;}
-  studentName=name;
-  speak(`Hello ${studentName}! Let's begin your learning journey.`);
-  fade(namePopup,subjectPopup);
-};
+/* ===== Splash ===== */
+setTimeout(()=>{
+  splash.classList.add('hidden');
+  if(studentName){ if(confirm(`Welcome back, ${studentName}! Continue last lesson?`)) fade(namePopup,lessonScreen); else fade(namePopup,namePopup); startLesson(); } 
+  else namePopup.classList.remove('hidden');
+},3000);
 
-subjectNext.onclick=()=>{
-  subject=subjectSelect.value;
-  if(!subject){alert("Please select a subject."); return;}
-  speak(`Good choice! ${subject} is a great subject. Now choose your topic.`);
-  fade(subjectPopup,topicPopup);
-};
+/* ===== Music ===== */
+musicToggle.onclick=()=>{ if(bgMusic.paused){ bgMusic.play(); musicToggle.textContent='🔊'; } else { bgMusic.pause(); musicToggle.textContent='🔇'; } };
 
-topicNext.onclick=()=>{
-  topic=topicInput.value.trim();
-  if(!topic){alert("Please enter a topic."); return;}
-  speak(`Great! Let's study ${topic}. How long should the lesson be?`);
-  fade(topicPopup,durationPopup);
-};
+/* ===== Popup Flow ===== */
+startBtn.onclick=()=>{ const name=document.getElementById('student-name').value.trim(); if(!name){alert("Enter your name."); return;} studentName=name; localStorage.setItem('studentName',studentName); fade(namePopup,subjectPopup);}
+subjectNext.onclick=()=>{ subject=subjectSelect.value; if(!subject){alert("Select a subject."); return;} localStorage.setItem('subject',subject); fade(subjectPopup,topicPopup);}
+topicNext.onclick=()=>{ topic=topicInput.value.trim(); if(!topic){alert("Enter topic."); return;} localStorage.setItem('topic',topic); fade(topicPopup,durationPopup);}
+durationStart.onclick=()=>{ duration=parseInt(durationSelect.value); localStorage.setItem('duration',duration); fade(durationPopup,lessonScreen); startLesson(); };
 
-durationStart.onclick=()=>{
-  duration=durationSelect.value;
-  speak(`Perfect! Starting your ${duration}-minute lesson on ${topic}.`);
-  fade(durationPopup,lessonScreen);
-  startLesson();
-};
-
-// Fetch lesson from backend
+/* ===== Lesson Fetch & Progress ===== */
 async function startLesson(){
-  lessonTitle.textContent = `${subject}: ${topic}`;
-  lessonContent.innerHTML = "<p>Loading your personalized lesson...</p>";
-  try {
-    const res = await fetch("https://classroomai.onrender.com/lesson", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subject, topic, duration })
-    });
-    const data = await res.json();
-    lessonContent.innerHTML = `<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
-    speak("Here we go! Let's begin your lesson.");
-  } catch(err) {
-    console.error(err);
-    lessonContent.innerHTML = "<p>Sorry, something went wrong fetching the lesson.</p>";
-  }
-}
-
-// Chat interaction
-chatSend.onclick = () => {
-  const msg = chatInput.value.trim();
-  if(!msg) return;
-  const userP = document.createElement("p");
-  userP.textContent = "🧑‍🎓 " + msg;
-  userP.style.textAlign = "right";
-  lessonContent.appendChild(userP);
-  chatInput.value = "";
-  handleStudentMessage(msg);
-};
-
-async function handleStudentMessage(msg){
-  const reply = document.createElement("p");
-  reply.style.textAlign = "left";
-  reply.textContent = "🤖 Thinking...";
-  lessonContent.appendChild(reply);
+  lessonTitle.textContent=`${subject}: ${topic}`;
+  lessonContent.innerHTML="<p>Loading your personalized lesson...</p>";
+  lessonTime=0;
+  progressBar.style.width='0%';
+  const interval=setInterval(()=>{
+    lessonTime++;
+    const percent=Math.min((lessonTime/(duration*60))*100,100);
+    progressBar.style.width=percent+'%';
+    if(percent>=100){ clearInterval(interval); showSummary(); }
+  },1000);
 
   try{
-    const res = await fetch("https://classroomai.onrender.com/lesson", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        subject,
-        topic,
-        duration: 10,
-        extra: `Student said: ${msg}. Respond as their teacher with explanations or clarifications.`
-      })
-    });
-    const data = await res.json();
-    reply.textContent = "🤖 " + data.lesson;
+    const res=await fetch("https://classroomai.onrender.com/lesson",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subject,topic,duration})});
+    const data=await res.json();
+    lessonContent.innerHTML=`<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
     speak(data.lesson);
-  } catch(e) {
-    reply.textContent = "⚠️ Sorry, I couldn't process that right now.";
-  }
+  } catch(err){ console.error(err); lessonContent.innerHTML="<p>Sorry, something went wrong fetching the lesson.</p>"; }
 }
 
-// Helpers
-function fade(hide, show){
-  hide.classList.add("hidden");
-  show.classList.remove("hidden");
+/* ===== Chat & Voice ===== */
+chatSend.onclick=()=>{ const msg=chatInput.value.trim(); if(!msg) return; appendMessage("🧑‍🎓",msg,'right'); chatInput.value=''; handleStudentMessage(msg);}
+async function handleStudentMessage(msg){
+  appendMessage("🤖","Thinking...",'left');
+  aiAvatar.classList.add('speaking');
+  try{
+    const res=await fetch("https://classroomai.onrender.com/lesson",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subject,topic,duration:10,extra:`Student said: ${msg}. Respond as their teacher with explanations or clarifications.`})});
+    const data=await res.json();
+    appendMessage("🤖",data.lesson,'left');
+    speak(data.lesson);
+  } catch(e){ appendMessage("⚠️","Could not process that right now.",'left'); }
+  aiAvatar.classList.remove('speaking');
 }
-function speak(text){
-  if('speechSynthesis' in window){
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 1; utter.pitch = 1; utter.volume = 1;
-    speechSynthesis.speak(utter);
-  }
+function appendMessage(prefix,text,align){ const p=document.createElement('p'); p.textContent=prefix+' '+text; p.style.textAlign=align; lessonContent.appendChild(p); lessonContent.scrollTop=lessonContent.scrollHeight;}
+voiceBtn.onclick=()=>{ if(!('webkitSpeechRecognition' in window)){alert("Voice input not supported."); return;} const recognition=new webkitSpeechRecognition(); recognition.lang='en-US'; recognition.onresult=(e)=>{ chatInput.value=e.results[0][0].transcript; chatSend.click(); }; recognition.start(); }
+function speak(text){ if('speechSynthesis' in window){ const utter=new SpeechSynthesisUtterance(text); utter.rate=1; utter.pitch=1; utter.volume=1; speechSynthesis.speak(utter);} }
+function fade(hide,show){ hide.classList.add('hidden'); show.classList.remove('hidden'); }
+
+/* ===== Lesson Summary ===== */
+function showSummary(){
+  summaryText.textContent=`Today you learned about ${topic} in ${subject}!`;
+  summaryPopup.style.display='block';
 }
-  
+redoBtn.onclick=()=>{ summaryPopup.style.display='none'; startLesson();}
+newBtn.onclick=()=>{ summaryPopup.style.display='none'; fade(lessonScreen,subjectPopup);}
+exitBtn.onclick=()=>{ summaryPopup.style.display='none'; alert("Thanks for learning!");}
+
+/* ===== Particle Background ===== */
+for(let i=0;i<50;i++){ const p=document.createElement('div'); p.classList.add('particle'); p.style.top=Math.random()*window.innerHeight+'px'; p.style.left=Math.random()*window.innerWidth+'px'; p.style.width=2+Math.random()*4+'px'; p.style.height=2+Math.random()*4+'px'; p.style.animationDuration=5+Math.random()*15+'s'; document.body.appendChild(p);}
 </script>
 </body>
 </html>
-
