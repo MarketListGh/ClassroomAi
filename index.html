@@ -1,244 +1,569 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Classroom by Carter Wells</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* ====== Global ====== */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-body { background: #0f172a; color:white; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; transition:background 1s; }
-.hidden { display:none; }
-
-/* ===== Splash Screen ===== */
-#splash { position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg,#4f46e5,#3b82f6); display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; font-size:2em; animation:fadeIn 1s; }
-#splash .spinner { margin-top:20px; width:50px; height:50px; border:5px solid rgba(255,255,255,0.2); border-top:5px solid #fff; border-radius:50%; animation:spin 1s linear infinite; }
-
-/* ===== Popups ===== */
-.popup { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background: rgba(255,255,255,0.1); backdrop-filter:blur(12px); padding:35px 40px; border-radius:20px; width:90%; max-width:420px; text-align:center; box-shadow:0 0 25px rgba(0,0,0,0.3); animation:fadeIn 0.8s; }
-.popup h2 { font-size:1.5em; margin-bottom:20px; }
-.popup p { font-size:1.1em; margin-bottom:15px; }
-input, select { width:100%; padding:10px 15px; border-radius:12px; border:none; font-size:1em; margin-bottom:15px; }
-button { background: linear-gradient(90deg,#4cc9f0,#4361ee); color:white; border:none; border-radius:12px; padding:12px 25px; font-weight:600; cursor:pointer; transition:0.3s; }
-button:hover { transform:scale(1.05); }
-
-/* ===== Lesson Screen ===== */
-#lesson-screen { display:flex; flex-direction:column; align-items:center; text-align:left; width:100%; height:100vh; overflow-y:auto; padding:30px; background: linear-gradient(135deg,#1e293b,#334155); position:relative; }
-#lesson-title { font-size:1.8em; background: linear-gradient(90deg,#4cc9f0,#4895ef); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
-#lesson-content { width:100%; max-width:800px; background: rgba(255,255,255,0.15); border-radius:20px; padding:25px; color:#fff; line-height:1.6em; box-shadow:0 0 20px rgba(0,0,0,0.2); }
-#chat-area { width:100%; max-width:800px; margin-top:20px; background: rgba(255,255,255,0.1); padding:15px; border-radius:15px; display:flex; align-items:center; }
-#chat-input { flex:1; padding:10px; border-radius:10px; border:none; margin-right:10px; }
-#chat-send { background:#4cc9f0; border:none; color:#fff; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer; }
-#voice-btn { background:#4895ef; margin-left:10px; padding:10px; border-radius:50%; cursor:pointer; }
-
-/* ===== Progress Bar ===== */
-#progress-container { width:100%; max-width:800px; height:20px; background:rgba(255,255,255,0.1); border-radius:10px; margin-top:15px; }
-#progress-bar { width:0%; height:100%; background:#4cc9f0; border-radius:10px; transition:0.2s; }
-
-/* ===== Floating AI Avatar ===== */
-#ai-avatar { position:fixed; bottom:30px; right:30px; width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#4cc9f0,#4895ef); display:flex; justify-content:center; align-items:center; font-size:2em; color:white; box-shadow:0 0 20px rgba(0,0,0,0.4); animation:avatarIdle 2s infinite alternate; z-index:100; }
-#ai-avatar.speaking { box-shadow:0 0 30px #4cc9f0; animation:avatarSpeak 0.5s infinite alternate; }
-
-/* ===== Lesson Summary Popup ===== */
-#summary-popup { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background: rgba(0,0,0,0.9); padding:30px; border-radius:20px; width:90%; max-width:500px; text-align:center; box-shadow:0 0 25px rgba(0,0,0,0.5); color:white; display:none; }
-#summary-popup h2 { margin-bottom:20px; }
-#summary-popup button { margin:5px; }
-
-/* ===== Particles ===== */
-.particle { position:absolute; width:5px; height:5px; background:white; border-radius:50%; opacity:0.3; animation:particleMove 10s linear infinite; }
-
-/* ===== Animations ===== */
-@keyframes fadeIn { from{opacity:0; transform:scale(0.95);} to{opacity:1; transform:scale(1);} }
-@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
-@keyframes particleMove { 0%{transform:translateY(0) translateX(0);} 100%{transform:translateY(-800px) translateX(800px);} }
-@keyframes avatarIdle { 0%{transform:translateY(0);} 100%{transform:translateY(-5px);} }
-@keyframes avatarSpeak { 0%{transform:scale(1);} 100%{transform:scale(1.1);} }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ClassroomAI — Mr. Kwame Mensah</title>
+  <meta name="description" content="Interactive virtual classroom with Mr. Kwame Mensah — Ghanaian AI teacher for SHS General Arts."/>
+  <style>
+    :root{
+      --bg:#f0f7fb; --card:#ffffff; --accent:#0d6efd; --muted:#6b7280;
+      --teacher-skin:#8d5524;
+    }
+    *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{margin:0;background:linear-gradient(180deg,#e6f2ff 0%,#f7fbff 100%);color:#0b1220}
+    header{background:#fff;padding:14px 18px;border-bottom:1px solid #eef2f6;display:flex;align-items:center;gap:12px}
+    header h1{font-size:18px;margin:0}
+    header small{color:var(--muted)}
+    .wrap{max-width:1100px;margin:20px auto;padding:0 18px;display:grid;grid-template-columns:1fr 380px;gap:20px}
+    /* Left: classroom */
+    .classroom{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(20,30,60,0.06)}
+    .board{background:linear-gradient(0deg,#083b2b,#0b4f36);color:#f8fff5;padding:18px;border-radius:8px;min-height:200px;position:relative}
+    .board h2{margin:0 0 6px;font-size:20px}
+    .board p{margin:0;color:rgba(255,255,255,0.9)}
+    .teacher-area{display:flex;gap:14px;align-items:center;margin-top:14px}
+    .avatar{width:96px;height:96px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px}
+    .avatar svg{width:84px;height:84px}
+    .controls{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+    .btn.secondary{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+    /* Subject/topic inputs */
+    .pickers{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+    .input, select{padding:10px;border-radius:8px;border:1px solid #e6edf3;width:100%}
+    .subject-col{flex:1;min-width:220px}
+    .topic-list{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+    .topic{background:#f8fafc;border:1px solid #e6edf3;padding:8px 10px;border-radius:8px;cursor:pointer}
+    /* Right: chat and lesson controls */
+    .sidebar{position:sticky;top:20px}
+    .card{background:var(--card);padding:12px;border-radius:10px;border:1px solid #f0f4f8}
+    .chat-window{height:420px;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+    .msg{max-width:85%;padding:10px;border-radius:10px}
+    .msg.teacher{background:#f1f9f6;align-self:flex-start}
+    .msg.student{background:#e7f0ff;align-self:flex-end}
+    .chat-input{display:flex;gap:8px;margin-top:10px}
+    .timer{font-weight:700;color:var(--accent)}
+    .small{font-size:13px;color:var(--muted)}
+    footer{max-width:1100px;margin:14px auto;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:980px){.wrap{grid-template-columns:1fr;}.sidebar{position:static}}
+  </style>
 </head>
 <body>
+  <header>
+    <div style="width:48px;height:48px;border-radius:8px;background:linear-gradient(90deg,#ffb86b,#ff6b6b)"></div>
+    <div>
+      <h1>ClassroomAI — Mr. Kwame Mensah</h1>
+      <small>Ghanaian AI teacher for SHS General Arts (Form 2)</small>
+    </div>
+  </header>
 
-<!-- Splash Screen -->
-<div id="splash">
-  <div>AI Classroom by Carter Wells</div>
-  <div class="spinner"></div>
-</div>
+  <main class="wrap">
+    <!-- LEFT COLUMN: classroom + board -->
+    <section class="classroom" aria-labelledby="classroom-title">
+      <div class="board" role="region" aria-live="polite">
+        <h2 id="classroom-title">Welcome — Mr. Kwame Mensah (AI Teacher)</h2>
+        <p id="board-sub">Type a subject (or choose one), then pick a topic the AI generates. The teacher will guide you step-by-step for the duration you choose.</p>
 
-<!-- Name Popup -->
-<div id="name-popup" class="popup hidden">
-  <h2>👋 Welcome Student!</h2>
-  <p>Enter your name to begin:</p>
-  <input type="text" id="student-name" placeholder="Your name here...">
-  <button id="start-btn">Start</button>
-</div>
+        <div class="teacher-area">
+          <div class="avatar" title="Mr. Kwame Mensah — Your teacher">
+            <!-- Simple African teacher SVG -->
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="100%" height="100%" rx="10" fill="white"/>
+              <g transform="translate(12,8)">
+                <ellipse cx="90" cy="24" rx="40" ry="28" fill="#2b211a"/>
+                <circle cx="90" cy="48" r="28" fill="#b77a52"/>
+                <path d="M80 54 q10 12 20 0" stroke="#3a2b20" stroke-width="3" fill="none"/>
+                <rect x="58" y="76" rx="12" ry="12" width="64" height="56" fill="#2b6f6c"/>
+              </g>
+            </svg>
+          </div>
+          <div>
+            <strong>Mr. Kwame Mensah</strong>
+            <div class="small">Patient. Clear. Ghanaian examples when useful.</div>
+            <div class="controls">
+              <button class="btn" id="btn-sample">Try a sample</button>
+              <button class="btn secondary" id="btn-reset">Reset Lesson</button>
+            </div>
+          </div>
+        </div>
 
-<!-- Subject Popup -->
-<div id="subject-popup" class="popup hidden">
-  <h2>Choose Your Subject 📚</h2>
-  <select id="subject-select">
-    <option value="">-- Select a Subject --</option>
-    <option>English Language</option>
-    <option>Mathematics</option>
-    <option>ICT</option>
-    <option>Economics</option>
-    <option>Social Studies</option>
-    <option>Government</option>
-    <option>Business Management</option>
-    <option>C.R.S</option>
-    <option>P.E.H</option>
-  </select>
-  <button id="subject-next">Next</button>
-</div>
+        <!-- SUBJECT / TOPICS -->
+        <div style="margin-top:16px">
+          <label class="small">Enter subject (type or pick below):</label>
+          <div class="pickers" style="margin-top:8px">
+            <div class="subject-col">
+              <input id="subjectInput" class="input" placeholder="e.g., Economics, ICT, English..." />
+            </div>
+            <div style="min-width:160px">
+              <button class="btn" id="btn-generateTopics">Generate Topics</button>
+            </div>
+          </div>
 
-<!-- Topic Popup -->
-<div id="topic-popup" class="popup hidden">
-  <h2>Choose a Topic 🧠</h2>
-  <input type="text" id="topic-input" placeholder="e.g. Algebra, Photosynthesis">
-  <button id="topic-next">Next</button>
-</div>
+          <div class="small" style="margin-top:10px">Or choose a quick subject:</div>
+          <div style="margin-top:8px" class="topic-list" id="quickSubjects">
+            <!-- quick subject buttons -->
+          </div>
 
-<!-- Duration Popup -->
-<div id="duration-popup" class="popup hidden">
-  <h2>Set Your Lesson Duration ⏱️</h2>
-  <select id="duration-select">
-    <option value="30">30 Minutes</option>
-    <option value="60">1 Hour</option>
-    <option value="90">1.5 Hours</option>
-    <option value="120">2 Hours</option>
-  </select>
-  <button id="duration-start">Start Lesson</button>
-</div>
+          <div id="topicsArea" style="margin-top:12px"></div>
+        </div>
 
-<!-- Lesson Screen -->
-<div id="lesson-screen" class="hidden">
-  <h2 id="lesson-title"></h2>
-  <div id="lesson-content"></div>
-  <div id="progress-container"><div id="progress-bar"></div></div>
-  <div id="chat-area">
-    <input type="text" id="chat-input" placeholder="Ask or answer here...">
-    <button id="chat-send">Send</button>
-    <button id="voice-btn">🎤</button>
-  </div>
-</div>
+      </div>
 
-<!-- Floating AI Avatar -->
-<div id="ai-avatar">🤖</div>
+      <!-- Lesson viewer -->
+      <div style="margin-top:14px" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <strong id="lessonHeader">No active lesson</strong>
+            <div class="small" id="lessonSub">Select a topic to begin.</div>
+          </div>
+          <div>
+            <span class="small">Time left: </span><span class="timer" id="timeLeft">--:--</span>
+          </div>
+        </div>
 
-<!-- Lesson Summary Popup -->
-<div id="summary-popup">
-  <h2>🎉 Lesson Complete!</h2>
-  <p id="summary-text"></p>
-  <button id="redo-btn">Redo Lesson</button>
-  <button id="new-btn">New Topic</button>
-  <button id="exit-btn">Exit</button>
-</div>
+        <div style="margin-top:12px" class="chat-window" id="lessonWindow" aria-live="polite">
+          <!-- messages -->
+        </div>
 
-<!-- Background Music -->
-<audio id="bg-music" loop src="https://www.bensound.com/bensound-music/bensound-sunny.mp3"></audio>
-<button id="music-toggle" style="position:fixed;bottom:10px;right:10px;padding:10px;border-radius:50%;background:#4cc9f0;color:white;">🔊</button>
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <input id="studentName" class="input" placeholder="Enter your name (e.g., Amina)" style="flex:1;min-width:160px"/>
+          <input id="durationInput" type="number" min="5" max="180" class="input" placeholder="Duration (minutes)" style="width:150px"/>
+          <button class="btn" id="btn-startLesson">Start Lesson</button>
+        </div>
+        <div class="small" style="margin-top:8px">During the lesson the teacher will teach, ask small checks, and summarize when time ends.</div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: chat & controls -->
+    <aside class="sidebar">
+      <div class="card">
+        <strong>Conversation</strong>
+        <div class="chat-window" id="chatWindow" style="height:240px;margin-top:10px"></div>
+
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Ask Mr. Kwame anything (during or after lesson)"/>
+          <button class="btn" id="chatSend">Send</button>
+        </div>
+
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn secondary" id="muteTTS">Toggle Voice</button>
+          <button class="btn secondary" id="downloadNotes">Export Notes</button>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="card small">
+        <strong>Status</strong>
+        <div id="statusText" style="margin-top:8px;color:var(--muted)">Idle</div>
+        <div style="margin-top:8px" class="small">This page talks to your AI backend (default: <code>https://classroomai.onrender.com/ask</code>). If no backend is available, built-in fallback content is used.</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>© ClassroomAI • Mr. Kwame Mensah • Designed for Ghana SHS students</footer>
 
 <script>
-/* ===== Variables ===== */
-const splash=document.getElementById('splash');
-const namePopup=document.getElementById('name-popup');
-const subjectPopup=document.getElementById('subject-popup');
-const topicPopup=document.getElementById('topic-popup');
-const durationPopup=document.getElementById('duration-popup');
-const lessonScreen=document.getElementById('lesson-screen');
-const startBtn=document.getElementById('start-btn');
-const subjectNext=document.getElementById('subject-next');
-const topicNext=document.getElementById('topic-next');
-const durationStart=document.getElementById('duration-start');
-const subjectSelect=document.getElementById('subject-select');
-const topicInput=document.getElementById('topic-input');
-const durationSelect=document.getElementById('duration-select');
-const lessonTitle=document.getElementById('lesson-title');
-const lessonContent=document.getElementById('lesson-content');
-const chatInput=document.getElementById('chat-input');
-const chatSend=document.getElementById('chat-send');
-const voiceBtn=document.getElementById('voice-btn');
-const progressBar=document.getElementById('progress-bar');
-const bgMusic=document.getElementById('bg-music');
-const musicToggle=document.getElementById('music-toggle');
-const aiAvatar=document.getElementById('ai-avatar');
-const summaryPopup=document.getElementById('summary-popup');
-const summaryText=document.getElementById('summary-text');
-const redoBtn=document.getElementById('redo-btn');
-const newBtn=document.getElementById('new-btn');
-const exitBtn=document.getElementById('exit-btn');
+/* ---------------------------
+   Config & Backend endpoint
+   --------------------------- */
+// Set API_BASE to your deployed server (Render) or another endpoint.
+// If left empty, the page will use local fallback content.
+const API_BASE = 'https://classroomai.onrender.com'; // change if needed
+const ASK_ENDPOINT = API_BASE ? (API_BASE + '/ask') : null;
+const LESSON_STATUS = API_BASE ? (API_BASE + '/lesson-status') : null;
 
-let studentName=localStorage.getItem('studentName')||'';
-let subject=localStorage.getItem('subject')||'';
-let topic=localStorage.getItem('topic')||'';
-let duration=parseInt(localStorage.getItem('duration'))||30;
-let lessonTime=0;
+/* ---------------------------
+   Quick subjects (for buttons)
+   --------------------------- */
+const QUICK_SUBJECTS = ['Business Management','ICT','Economics','CRS','Mathematics','English','Social Studies','P.E.H','Government'];
+const quickSubjectsEl = document.getElementById('quickSubjects');
+QUICK_SUBJECTS.forEach(s=>{
+  const btn = document.createElement('button');
+  btn.className = 'topic';
+  btn.textContent = s;
+  btn.addEventListener('click', ()=> { document.getElementById('subjectInput').value = s; });
+  quickSubjectsEl.appendChild(btn);
+});
 
-/* ===== Splash ===== */
-setTimeout(()=>{
-  splash.classList.add('hidden');
-  if(studentName){ if(confirm(`Welcome back, ${studentName}! Continue last lesson?`)) fade(namePopup,lessonScreen); else fade(namePopup,namePopup); startLesson(); } 
-  else namePopup.classList.remove('hidden');
-},3000);
+/* ---------------------------
+   UI elements & state
+   --------------------------- */
+const topicsArea = document.getElementById('topicsArea');
+const btnGenerate = document.getElementById('btn-generateTopics');
+const lessonWindow = document.getElementById('lessonWindow');
+const chatWindow = document.getElementById('chatWindow');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const btnStart = document.getElementById('btn-startLesson');
+const btnSample = document.getElementById('btn-sample');
+const btnReset = document.getElementById('btn-reset');
+const muteTTS = document.getElementById('muteTTS');
+const downloadNotesBtn = document.getElementById('downloadNotes');
+const statusText = document.getElementById('statusText');
+const timeLeftEl = document.getElementById('timeLeft');
+const lessonHeader = document.getElementById('lessonHeader');
+const lessonSub = document.getElementById('lessonSub');
 
-/* ===== Music ===== */
-musicToggle.onclick=()=>{ if(bgMusic.paused){ bgMusic.play(); musicToggle.textContent='🔊'; } else { bgMusic.pause(); musicToggle.textContent='🔇'; } };
+let currentSubject = '';
+let currentTopic = '';
+let sessionId = null;
+let lessonTimer = null;
+let lessonEndsAt = null;
+let ttsEnabled = true;
+let studentName = '';
+let lessonRunning = false;
+let lessonIntervalHandle = null;
+let lessonStep = 0; // increments for requesting next segment
+let savedNotes = [];
 
-/* ===== Popup Flow ===== */
-startBtn.onclick=()=>{ const name=document.getElementById('student-name').value.trim(); if(!name){alert("Enter your name."); return;} studentName=name; localStorage.setItem('studentName',studentName); fade(namePopup,subjectPopup);}
-subjectNext.onclick=()=>{ subject=subjectSelect.value; if(!subject){alert("Select a subject."); return;} localStorage.setItem('subject',subject); fade(subjectPopup,topicPopup);}
-topicNext.onclick=()=>{ topic=topicInput.value.trim(); if(!topic){alert("Enter topic."); return;} localStorage.setItem('topic',topic); fade(topicPopup,durationPopup);}
-durationStart.onclick=()=>{ duration=parseInt(durationSelect.value); localStorage.setItem('duration',duration); fade(durationPopup,lessonScreen); startLesson(); };
+/* ---------------------------
+   Built-in fallback topic lists & mini-lesson segments
+   (Used if backend is unreachable)
+   --------------------------- */
+const FALLBACK_TOPICS = {
+  'Economics': ['Demand & Supply','Market Equilibrium','Elasticity','Types of Markets','Public Finance','National Income','Inflation','International Trade'],
+  'ICT': ['Computer Basics','Hardware vs Software','Networks (LAN/WAN)','Spreadsheets','Internet Safety','Programming Basics','Storage & Memory','ICT in Business'],
+  'Mathematics': ['Algebra','Geometry','Statistics','Equations','Functions','Trigonometry','Percentages','Number Theory'],
+  'English': ['Grammar & Tenses','Comprehension','Summary Writing','Poetry','Prose','Punctuation','Vocabulary','Creative Writing'],
+  'Business Management': ['Management Functions','Marketing','Finance Basics','Entrepreneurship','Business Law','Production','Human Resource','Records & Accounts'],
+  'CRS': ['Christian Ethics','Bible Teachings','Moral Responsibilities','Community Service','Religious Practices','Leadership','Rights & Duties','Respect & Tolerance'],
+  'Social Studies': ['Community Development','Culture & Society','Civics','Population','Economy & Society','Local Governance','Social Problems','Conflict Resolution'],
+  'P.E.H': ['Fitness & Health','Nutrition','First Aid','Sports','Personal Hygiene','Drug Abuse Prevention','Mental Health','Exercise Benefits'],
+  'Government': ['Branches of Government','Constitution','Citizenship','Democracy','Local Government','Elections','Rights & Duties','Public Policy']
+};
 
-/* ===== Lesson Fetch & Progress ===== */
-async function startLesson(){
-  lessonTitle.textContent=`${subject}: ${topic}`;
-  lessonContent.innerHTML="<p>Loading your personalized lesson...</p>";
-  lessonTime=0;
-  progressBar.style.width='0%';
-  const interval=setInterval(()=>{
-    lessonTime++;
-    const percent=Math.min((lessonTime/(duration*60))*100,100);
-    progressBar.style.width=percent+'%';
-    if(percent>=100){ clearInterval(interval); showSummary(); }
-  },1000);
+function fallbackGenerateTopics(subject){
+  return FALLBACK_TOPICS[subject] || ['Overview','Fundamentals','Important Concepts','Practice'];
+}
+
+/* ---------------------------
+   Helpers: DOM message functions
+   --------------------------- */
+function pushLessonMessage(text, who='teacher'){
+  const div = document.createElement('div');
+  div.className = 'msg ' + (who === 'teacher' ? 'teacher' : 'student');
+  div.textContent = text;
+  lessonWindow.appendChild(div);
+  lessonWindow.scrollTop = lessonWindow.scrollHeight;
+  if(who === 'teacher') speakText(text);
+  if(who === 'teacher') savedNotes.push(text);
+}
+
+function pushChatMessage(text, who='teacher'){
+  const d = document.createElement('div');
+  d.className = 'msg ' + (who==='teacher' ? 'teacher' : 'student');
+  d.textContent = text;
+  chatWindow.appendChild(d);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  if(who==='teacher') speakText(text);
+}
+
+/* ---------------------------
+   TTS (male preference)
+   --------------------------- */
+function speakText(text){
+  if(!ttsEnabled || !('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  const voices = speechSynthesis.getVoices();
+  // Prefer English voices; try to pick a male-like voice or en-GB for Ghanaian-ish accent
+  let chosen = voices.find(v => /en-GB/.test(v.lang) && /male|daniel|alex|matt|mark|david/i.test(v.name)) ||
+               voices.find(v => /en-GB/.test(v.lang)) ||
+               voices.find(v => /en-US/.test(v.lang) && /male|alex|david/i.test(v.name)) ||
+               voices.find(v => /en-US/.test(v.lang));
+  if(chosen) u.voice = chosen;
+  u.lang = chosen?.lang || 'en-US';
+  u.rate = 0.95;
+  u.pitch = 1;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+/* ---------------------------
+   Core: Generate Topics (ask backend or fallback)
+   --------------------------- */
+btnGenerate.addEventListener('click', async ()=>{
+  const subject = document.getElementById('subjectInput').value.trim();
+  if(!subject){ alert('Type a subject first.'); return; }
+  currentSubject = subject;
+  topicsArea.innerHTML = '<div class="small">Generating topics…</div>';
+  status('Generating topics for ' + subject);
+  try{
+    const prompt = `List 8 concise, relevant topics (short names) under the subject "${subject}" suitable for a Ghanaian SHS Form 2 General Arts student. Return them as a numbered short list.`;
+    let topics = null;
+    if(ASK_ENDPOINT){
+      const res = await fetch(ASK_ENDPOINT, {
+        method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({ subject, question: prompt })
+      });
+      const data = await res.json();
+      const reply = (data.reply || '').trim();
+      // try to extract lines
+      topics = reply.split(/\r?\n/).map(l=>l.replace(/^\d+[\.\)]\s*/,'').trim()).filter(Boolean);
+      if(!topics.length) topics = null;
+    }
+    if(!topics){
+      topics = fallbackGenerateTopics(subject);
+      status('Using fallback topics (no backend).');
+    } else {
+      status('Topics generated by AI.');
+    }
+    renderTopics(topics);
+  }catch(err){
+    console.error(err);
+    const topics = fallbackGenerateTopics(currentSubject || subject);
+    status('Error contacting backend — using fallback topics.');
+    renderTopics(topics);
+  }
+});
+
+/* render topics as buttons */
+function renderTopics(list){
+  topicsArea.innerHTML = '<div class="small">Choose a topic:</div>';
+  const wrap = document.createElement('div'); wrap.className='topic-list';
+  list.forEach(t=>{
+    const b = document.createElement('button'); b.className='topic'; b.textContent = t;
+    b.addEventListener('click', ()=> chooseTopic(t));
+    wrap.appendChild(b);
+  });
+  topicsArea.appendChild(wrap);
+}
+
+/* when user picks a topic */
+function chooseTopic(t){
+  currentTopic = t;
+  lessonHeader.textContent = `${currentSubject} — ${currentTopic}`;
+  lessonSub.textContent = 'Enter your name and set duration, then Start Lesson.';
+  pushLessonMessage(`Topic selected: ${t}. When you are ready, enter your name and duration, then press Start Lesson.`, 'teacher');
+}
+
+/* ---------------------------
+   Start Lesson flow
+   --------------------------- */
+btnStart.addEventListener('click', async ()=>{
+  if(lessonRunning){ alert('A lesson is already running. Reset to start a new one.'); return; }
+  const nameInput = document.getElementById('studentName').value.trim();
+  const duration = parseInt(document.getElementById('durationInput').value,10);
+  if(!currentSubject || !currentTopic){ alert('Select a subject and topic first.'); return; }
+  if(!nameInput){ alert('Please enter your name.'); return; }
+  if(!duration || duration < 5){ alert('Enter duration in minutes (min 5).'); return; }
+  studentName = nameInput;
+  lessonRunning = true;
+  sessionId = null;
+  lessonStep = 0;
+  savedNotes = [];
+  lessonWindow.innerHTML = '';
+  pushLessonMessage('Preparing your lesson… Please wait.', 'teacher');
+  status('Preparing lesson');
+
+  // Create session via backend by sending lessonDuration in /ask (backend returns sessionId)
+  try{
+    if(ASK_ENDPOINT){
+      const body = { subject: currentSubject, question: `Start lesson on "${currentTopic}" for ${duration} minutes. Prepare an intro and teaching plan.`, studentName, lessonDuration: duration };
+      const res = await fetch(ASK_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      const data = await res.json();
+      if(data.sessionId) sessionId = data.sessionId;
+      if(data.reply) {
+        // show preparing reply (server may return quick prepping text)
+        lessonWindow.innerHTML = '';
+        pushLessonMessage(data.reply, 'teacher');
+      }
+    } else {
+      // fallback prepare text
+      lessonWindow.innerHTML = '';
+      pushLessonMessage(`Hello ${studentName}! Preparing a ${duration}-minute lesson on ${currentSubject} — ${currentTopic}. I'll guide you step-by-step.`, 'teacher');
+    }
+  }catch(err){
+    console.warn('Start lesson backend error', err);
+    lessonWindow.innerHTML = '';
+    pushLessonMessage(`Hello ${studentName}! Preparing a ${duration}-minute lesson on ${currentSubject} — ${currentTopic}. (Offline fallback)`, 'teacher');
+  }
+
+  // Set timer
+  const now = Date.now();
+  lessonEndsAt = now + duration * 60000;
+  updateTimeLeft();
+  // Begin teaching loop: request the first segment immediately
+  await teachNextSegment(); // first segment
+  // Then schedule next segments every ~45 seconds (adjustable)
+  lessonIntervalHandle = setInterval(async ()=>{
+    if(Date.now() >= lessonEndsAt){
+      endLesson();
+      return;
+    }
+    await teachNextSegment();
+  }, 45000); // new segment every 45 seconds (keeps conversation flowing)
+});
+
+/* Request next lesson segment from backend (or fallback) */
+async function teachNextSegment(){
+  if(!lessonRunning) return;
+  lessonStep++;
+  status(`Teaching — step ${lessonStep}`);
+  // Build prompt for this segment — we ask teacher to continue teaching, ask a short check, provide example, or summary.
+  const action = lessonStep === 1 ? 'introduction' :
+                 lessonStep === 2 ? 'explain key concepts' :
+                 lessonStep === 3 ? 'give an example and a short practice question' :
+                 lessonStep % 5 === 0 ? 'give a quick 1-question check and encouragement' :
+                 'continue with the next part of the lesson';
+
+  const remainingMin = Math.max(0, Math.ceil((lessonEndsAt - Date.now()) / 60000));
+  const prompt = `Task: As Mr. Kwame Mensah (male Ghanaian SHS teacher), ${action} for the topic "${currentTopic}" under subject "${currentSubject}" for Form 2 students.
+Include clear definitions, a short example (preferably Ghanaian/contextual), and a single short question for the student to answer when appropriate.
+Current step: ${lessonStep}. Remaining minutes: ${remainingMin}.
+Keep replies friendly, in American English but easy to follow.`;
 
   try{
-    const res=await fetch("https://classroomai.onrender.com/lesson",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subject,topic,duration})});
-    const data=await res.json();
-    lessonContent.innerHTML=`<p>${data.lesson.replace(/\n/g,"</p><p>")}</p>`;
-    speak(data.lesson);
-  } catch(err){ console.error(err); lessonContent.innerHTML="<p>Sorry, something went wrong fetching the lesson.</p>"; }
+    if(ASK_ENDPOINT){
+      const res = await fetch(ASK_ENDPOINT, {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ subject: currentSubject, question: prompt, studentName, sessionId })
+      });
+      const data = await res.json();
+      const reply = (data.reply || '').trim() || '...';
+      pushLessonMessage(reply, 'teacher');
+    } else {
+      // fallback generated segment (simple)
+      const fallback = generateFallbackSegment(action);
+      pushLessonMessage(fallback, 'teacher');
+    }
+  }catch(err){
+    console.error('teachNextSegment error', err);
+    const fallback = generateFallbackSegment(action);
+    pushLessonMessage(fallback, 'teacher');
+  }
 }
 
-/* ===== Chat & Voice ===== */
-chatSend.onclick=()=>{ const msg=chatInput.value.trim(); if(!msg) return; appendMessage("🧑‍🎓",msg,'right'); chatInput.value=''; handleStudentMessage(msg);}
-async function handleStudentMessage(msg){
-  appendMessage("🤖","Thinking...",'left');
-  aiAvatar.classList.add('speaking');
+/* Basic fallback segment generator */
+function generateFallbackSegment(action){
+  if(action.includes('introduction')){
+    return `Hello ${studentName}! Today we are learning ${currentSubject} — ${currentTopic}. I will explain the basics, show an example, and ask short questions. Stay focused and answer when asked.`;
+  }
+  if(action.includes('explain key')){
+    return `${currentTopic} — Key ideas: (1) Define the main terms. (2) Show how they connect. Try to write short notes as you listen.`;
+  }
+  if(action.includes('example')){
+    return `Example: Imagine a local market in Accra where sellers adjust prices. How would that affect buyers? Quick question: In one sentence, say how price affects demand.`;
+  }
+  if(action.includes('check')){
+    return `Quick check: Summarize in one line what you learned so far.`;
+  }
+  return `Continuing the lesson: focus on practice. Try answering short questions and I'll give feedback.`;
+}
+
+/* End lesson: provide summary and save notes */
+function endLesson(){
+  if(!lessonRunning) return;
+  lessonRunning = false;
+  clearInterval(lessonIntervalHandle);
+  lessonIntervalHandle = null;
+  const summary = `Great work, ${studentName}! You have completed the lesson on ${currentSubject} — ${currentTopic}. Summary: ${savedNotes.slice(-3).join(' ')}\nKeep practicing and review these notes later.`;
+  pushLessonMessage(summary, 'teacher');
+  status('Lesson finished');
+  timeLeftEl.textContent = '00:00';
+  lessonHeader.textContent = 'Lesson completed';
+  // optional: export notes automatically
+}
+
+/* Update the time left on UI (called periodically) */
+function updateTimeLeft(){
+  if(!lessonEndsAt){ timeLeftEl.textContent = '--:--'; return; }
+  const now = Date.now();
+  const ms = Math.max(0, lessonEndsAt - now);
+  const mm = Math.floor(ms / 60000).toString().padStart(2,'0');
+  const ss = Math.floor((ms % 60000) / 1000).toString().padStart(2,'0');
+  timeLeftEl.textContent = `${mm}:${ss}`;
+  if(ms <= 0) { endLesson(); return; }
+  // update small every second while lesson running
+  clearTimeout(lessonTimer);
+  lessonTimer = setTimeout(updateTimeLeft, 1000);
+}
+
+/* Reset the lesson state */
+btnReset.addEventListener('click', ()=>{
+  if(confirm('Reset lesson and clear session?')) {
+    lessonRunning = false;
+    clearInterval(lessonIntervalHandle);
+    lessonIntervalHandle = null;
+    lessonWindow.innerHTML = '';
+    chatWindow.innerHTML = '';
+    document.getElementById('studentName').value = '';
+    document.getElementById('durationInput').value = '';
+    sessionId = null;
+    lessonEndsAt = null;
+    lessonHeader.textContent = 'No active lesson';
+    lessonSub.textContent = 'Select a topic to begin.';
+    timeLeftEl.textContent = '--:--';
+    status('Reset');
+  }
+});
+
+/* Sample button (quick demo) */
+btnSample.addEventListener('click', ()=>{
+  document.getElementById('subjectInput').value = 'Economics';
+  btnGenerate.click();
+  setTimeout(()=> {
+    // pick first topic automatically after topics appear
+    const firstTopicBtn = topicsArea.querySelector('.topic');
+    if(firstTopicBtn) firstTopicBtn.click();
+    document.getElementById('studentName').value = 'Amina';
+    document.getElementById('durationInput').value = 10;
+    btnStart.click();
+  }, 1200);
+});
+
+/* ---------------------------
+   Chat box (ask teacher anytime)
+   --------------------------- */
+chatSend.addEventListener('click', sendChat);
+chatInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter') sendChat(); });
+
+async function sendChat(){
+  const text = chatInput.value.trim();
+  if(!text) return;
+  pushChatMessage(text, 'student');
+  chatInput.value = '';
+  status('Asking teacher...');
   try{
-    const res=await fetch("https://classroomai.onrender.com/lesson",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subject,topic,duration:10,extra:`Student said: ${msg}. Respond as their teacher with explanations or clarifications.`})});
-    const data=await res.json();
-    appendMessage("🤖",data.lesson,'left');
-    speak(data.lesson);
-  } catch(e){ appendMessage("⚠️","Could not process that right now.",'left'); }
-  aiAvatar.classList.remove('speaking');
+    const prompt = `Short answer as Mr. Kwame Mensah to this student question: "${text}" (Subject: ${currentSubject || 'General'})`;
+    if(ASK_ENDPOINT){
+      const res = await fetch(ASK_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ subject: currentSubject, question: prompt, studentName, sessionId }) });
+      const data = await res.json();
+      const reply = data.reply || 'Sorry, I could not answer that.';
+      pushChatMessage(reply, 'teacher');
+    } else {
+      pushChatMessage('Offline: I would explain that with a short example. (Deploy backend for full answers.)', 'teacher');
+    }
+  }catch(err){
+    console.error('chat error', err);
+    pushChatMessage('Error contacting teacher. Try again later.', 'teacher');
+  }
 }
-function appendMessage(prefix,text,align){ const p=document.createElement('p'); p.textContent=prefix+' '+text; p.style.textAlign=align; lessonContent.appendChild(p); lessonContent.scrollTop=lessonContent.scrollHeight;}
-voiceBtn.onclick=()=>{ if(!('webkitSpeechRecognition' in window)){alert("Voice input not supported."); return;} const recognition=new webkitSpeechRecognition(); recognition.lang='en-US'; recognition.onresult=(e)=>{ chatInput.value=e.results[0][0].transcript; chatSend.click(); }; recognition.start(); }
-function speak(text){ if('speechSynthesis' in window){ const utter=new SpeechSynthesisUtterance(text); utter.rate=1; utter.pitch=1; utter.volume=1; speechSynthesis.speak(utter);} }
-function fade(hide,show){ hide.classList.add('hidden'); show.classList.remove('hidden'); }
 
-/* ===== Lesson Summary ===== */
-function showSummary(){
-  summaryText.textContent=`Today you learned about ${topic} in ${subject}!`;
-  summaryPopup.style.display='block';
-}
-redoBtn.onclick=()=>{ summaryPopup.style.display='none'; startLesson();}
-newBtn.onclick=()=>{ summaryPopup.style.display='none'; fade(lessonScreen,subjectPopup);}
-exitBtn.onclick=()=>{ summaryPopup.style.display='none'; alert("Thanks for learning!");}
+/* ---------------------------
+   Toggle TTS and export notes
+   --------------------------- */
+muteTTS.addEventListener('click', ()=>{
+  ttsEnabled = !ttsEnabled;
+  muteTTS.textContent = ttsEnabled ? 'Toggle Voice' : 'Voice Off';
+  status('TTS ' + (ttsEnabled ? 'enabled' : 'disabled'));
+});
 
-/* ===== Particle Background ===== */
-for(let i=0;i<50;i++){ const p=document.createElement('div'); p.classList.add('particle'); p.style.top=Math.random()*window.innerHeight+'px'; p.style.left=Math.random()*window.innerWidth+'px'; p.style.width=2+Math.random()*4+'px'; p.style.height=2+Math.random()*4+'px'; p.style.animationDuration=5+Math.random()*15+'s'; document.body.appendChild(p);}
+downloadNotesBtn.addEventListener('click', ()=>{
+  if(savedNotes.length === 0){ alert('No notes yet.'); return; }
+  const text = savedNotes.join('\n\n');
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `${studentName || 'student'}_${currentSubject}_${currentTopic}_notes.txt`; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ---------------------------
+   Utilities
+   --------------------------- */
+function status(text){ statusText.textContent = text; }
+
+window.addEventListener('beforeunload', ()=>{
+  if(lessonRunning && !confirm('A lesson is in progress. Leave anyway?')) return false;
+});
 </script>
 </body>
 </html>
