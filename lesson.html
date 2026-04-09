@@ -14,22 +14,33 @@
   font-family:"Segoe UI",sans-serif;
 }
 
+/* BACKGROUND */
 body{
-  background:#f4f7fb;
+  background: linear-gradient(135deg,#4facfe,#00f2fe);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-/* LAYOUT */
+/* MAIN CONTAINER */
 .container{
+  width:95%;
+  max-width:1100px;
+  height:90vh;
+  background:white;
+  border-radius:20px;
   display:grid;
   grid-template-columns:2fr 1fr;
-  height:100vh;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,0.2);
 }
 
-/* LEFT - LESSON */
-.lesson{
-  padding:20px;
+/* LEFT SIDE */
+.left{
   display:flex;
   flex-direction:column;
+  padding:20px;
 }
 
 /* HEADER */
@@ -37,22 +48,21 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:15px;
 }
 
-.title{
-  font-size:18px;
-  font-weight:bold;
+.header h2{
+  color:#2563eb;
 }
 
+/* PROGRESS */
 .progress{
   height:8px;
-  background:#ddd;
+  background:#eee;
   border-radius:10px;
-  overflow:hidden;
+  margin-top:10px;
 }
 
-.progress-bar{
+.bar{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#22c55e,#4ade80);
@@ -61,17 +71,18 @@ body{
 /* CHAT */
 .chat{
   flex:1;
+  margin-top:15px;
   overflow:auto;
   display:flex;
   flex-direction:column;
   gap:10px;
-  margin-top:15px;
 }
 
 .msg{
   padding:12px;
   border-radius:12px;
   max-width:75%;
+  line-height:1.4;
 }
 
 .teacher{
@@ -83,7 +94,7 @@ body{
   align-self:flex-end;
 }
 
-/* INPUT */
+/* INPUT AREA */
 .input-area{
   display:flex;
   gap:10px;
@@ -98,7 +109,7 @@ input{
 }
 
 button{
-  padding:12px;
+  padding:12px 16px;
   border:none;
   border-radius:10px;
   background:#2563eb;
@@ -107,9 +118,9 @@ button{
   cursor:pointer;
 }
 
-/* RIGHT PANEL */
-.sidebar{
-  background:white;
+/* RIGHT SIDE */
+.right{
+  background:#f9fafb;
   padding:20px;
   border-left:1px solid #eee;
   display:flex;
@@ -130,18 +141,20 @@ button{
   margin:auto;
 }
 
-/* SUBJECT LIST */
+.teacher-box h3{
+  margin-top:10px;
+}
+
+/* SUBJECTS */
 .subjects{
-  max-height:200px;
-  overflow:auto;
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
 
 .subject{
-  background:#f1f5f9;
   padding:6px 10px;
+  background:#e2e8f0;
   border-radius:8px;
   cursor:pointer;
   font-size:12px;
@@ -152,12 +165,18 @@ button{
   font-size:14px;
 }
 
+/* BUTTON */
+.dashboard-btn{
+  margin-top:auto;
+  background:#22c55e;
+}
+
 /* MOBILE */
 @media(max-width:900px){
   .container{
     grid-template-columns:1fr;
   }
-  .sidebar{
+  .right{
     display:none;
   }
 }
@@ -169,27 +188,27 @@ button{
 <div class="container">
 
 <!-- LEFT -->
-<div class="lesson">
+<div class="left">
 
 <div class="header">
-  <div class="title" id="lessonTitle"></div>
+  <h2 id="title"></h2>
 </div>
 
 <div class="progress">
-  <div id="progressBar" class="progress-bar"></div>
+  <div id="bar" class="bar"></div>
 </div>
 
 <div id="chat" class="chat"></div>
 
 <div class="input-area">
-  <input id="input" placeholder="Ask your teacher...">
+  <input id="input" placeholder="Ask your teacher anything...">
   <button onclick="send()">Send</button>
 </div>
 
 </div>
 
 <!-- RIGHT -->
-<div class="sidebar">
+<div class="right">
 
 <div class="teacher-box">
   <div class="avatar"></div>
@@ -208,7 +227,7 @@ button{
   <div class="stat">Level: <span id="level"></span></div>
 </div>
 
-<button onclick="goDashboard()">Go to Dashboard</button>
+<button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
 
 </div>
 
@@ -221,7 +240,7 @@ const name = localStorage.getItem("studentName") || "Student";
 let subject = localStorage.getItem("subject") || "General";
 let topic = localStorage.getItem("topic") || "Introduction";
 
-document.getElementById("lessonTitle").innerText =
+document.getElementById("title").innerText =
 `${subject} - ${topic}`;
 
 /* SUBJECT LIST */
@@ -239,14 +258,13 @@ subjectList.forEach(s=>{
   el.className="subject";
   el.innerText=s;
   el.onclick=()=>{
-    subject = s;
     localStorage.setItem("subject",s);
     location.reload();
   };
   subjectsDiv.appendChild(el);
 });
 
-/* XP SYSTEM */
+/* XP */
 let xp = parseInt(localStorage.getItem("xp") || 0);
 
 function updateStats(){
@@ -256,23 +274,20 @@ function updateStats(){
 }
 updateStats();
 
-/* CHAT SYSTEM */
+/* CHAT */
 const chat = document.getElementById("chat");
 
-function teacherReply(text){
+function teacher(text){
   chat.innerHTML += `<div class="msg teacher">${text}</div>`;
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* AUTO LESSON */
-function startLesson(){
-  teacherReply(`Hello ${name}! Today we are learning ${topic} in ${subject}.`);
-  teacherReply(`Let me explain it step by step in a simple way.`);
-  teacherReply(`First, ${topic} means...`);
-}
-startLesson();
+/* START LESSON */
+teacher(`Hello ${name}! 👋`);
+teacher(`Today we are learning ${topic} in ${subject}.`);
+teacher(`Let me break it down simply for you.`);
 
-/* SEND MESSAGE */
+/* SEND */
 function send(){
   const input = document.getElementById("input");
   const text = input.value;
@@ -281,12 +296,13 @@ function send(){
 
   chat.innerHTML += `<div class="msg student">${text}</div>`;
 
-  teacherReply("Great question! Think of it like this...");
-  
+  teacher("Great question! Here's a simple explanation...");
+
   input.value="";
 
   xp += 5;
   localStorage.setItem("xp",xp);
+
   updateStats();
   updateProgress();
 }
@@ -296,10 +312,10 @@ let progress = 0;
 
 function updateProgress(){
   progress += 10;
-  document.getElementById("progressBar").style.width = progress+"%";
+  document.getElementById("bar").style.width = progress+"%";
 }
 
-/* NAVIGATION */
+/* NAV */
 function goDashboard(){
   window.location.href="dashboard.html";
 }
