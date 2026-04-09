@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard - ClassroomAI</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* BACKGROUND */
+body{
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+  min-height:100vh;
+  padding:20px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1000px;
+  margin:auto;
+  display:grid;
+  gap:20px;
+}
+
+/* CARD */
+.card{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  color:white;
+}
+
+.header h1{
+  font-size:28px;
+}
+
+/* STATS GRID */
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+/* STAT BOX */
+.stat-box{
+  padding:20px;
+  border-radius:12px;
+  color:white;
+  font-weight:bold;
+  text-align:center;
+}
+
+.xp{background:linear-gradient(135deg,#667eea,#764ba2);}
+.level{background:linear-gradient(135deg,#43e97b,#38f9d7);}
+
+/* PROGRESS */
+.progress{
+  height:12px;
+  background:#eee;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.bar{
+  height:100%;
+  background:linear-gradient(90deg,#22c55e,#4ade80);
+  width:0%;
+}
+
+/* SUBJECT CARD */
+.subject-card{
+  background:linear-gradient(135deg,#4facfe,#00f2fe);
+  color:white;
+  border-radius:12px;
+  padding:20px;
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background:#2563eb;
+  color:white;
+}
+
+.secondary{
+  background:#22c55e;
+  color:white;
+}
+
+/* BADGE */
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#facc15;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+/* MOTIVATION */
+.motivation{
+  text-align:center;
+  font-size:16px;
+  color:#444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>📊 Your Dashboard</h1>
+  <p>Track your learning progress</p>
+</div>
+
+<div class="container">
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-box xp">
+    XP<br><span id="xp" style="font-size:22px"></span>
+  </div>
+
+  <div class="stat-box level">
+    Level<br><span id="level" style="font-size:22px"></span>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="card">
+  <h3>Progress to Next Level</h3>
+  <div class="progress">
+    <div id="bar" class="bar"></div>
+  </div>
+</div>
+
+<!-- SUBJECT -->
+<div class="subject-card">
+  <h3>📘 Current Learning</h3>
+  <p><b>Subject:</b> <span id="subject"></span></p>
+  <p><b>Topic:</b> <span id="topic"></span></p>
+
+  <div class="badge" id="badge"></div>
+</div>
+
+<!-- MOTIVATION -->
+<div class="card motivation" id="motivation"></div>
+
+<!-- BUTTONS -->
+<div class="card buttons">
+  <button class="primary" onclick="continueLesson()">Continue Lesson</button>
+  <button class="secondary" onclick="newLesson()">New Lesson</button>
+</div>
+
+</div>
+
+<script>
+
+/* LOAD DATA */
+let xp = parseInt(localStorage.getItem("xp") || 0);
+let level = Math.floor(xp / 50) + 1;
+
+let subject = localStorage.getItem("subject") || "None";
+let topic = localStorage.getItem("topic") || "None";
+
+/* DISPLAY */
+document.getElementById("xp").innerText = xp;
+document.getElementById("level").innerText = level;
+document.getElementById("subject").innerText = subject;
+document.getElementById("topic").innerText = topic;
+
+/* PROGRESS BAR */
+let progress = (xp % 50) * 2;
+document.getElementById("bar").style.width = progress + "%";
+
+/* BADGES */
+let badge = "Beginner";
+if(level >= 3) badge = "🔥 Rising Star";
+if(level >= 5) badge = "🏆 Smart Student";
+if(level >= 10) badge = "👑 Genius";
+
+document.getElementById("badge").innerText = badge;
+
+/* MOTIVATION */
+const messages = [
+"Keep going! You're doing great 🚀",
+"Every lesson makes you smarter 🧠",
+"Consistency is the key 🔑",
+"You are building your future 💡",
+"Small progress is still progress 👍"
+];
+
+document.getElementById("motivation").innerText =
+messages[Math.floor(Math.random()*messages.length)];
+
+/* NAVIGATION */
+function continueLesson(){
+  window.location.href = "lesson.html";
+}
+
+function newLesson(){
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>
