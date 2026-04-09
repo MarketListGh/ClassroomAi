@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 
 /* =========================
    APP SETUP
@@ -10,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
-   GROQ API KEY (SAFE - FROM RENDER)
+   GROQ API KEY (FROM RENDER ENV)
 ========================= */
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
