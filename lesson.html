@@ -14,7 +14,6 @@
   font-family:"Segoe UI",sans-serif;
 }
 
-/* BACKGROUND */
 body{
   background: linear-gradient(135deg,#4facfe,#00f2fe);
   height:100vh;
@@ -23,7 +22,6 @@ body{
   align-items:center;
 }
 
-/* MAIN CONTAINER */
 .container{
   width:95%;
   max-width:1100px;
@@ -36,25 +34,20 @@ body{
   box-shadow:0 20px 50px rgba(0,0,0,0.2);
 }
 
-/* LEFT SIDE */
 .left{
   display:flex;
   flex-direction:column;
   padding:20px;
 }
 
-/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
 
-.header h2{
-  color:#2563eb;
-}
+.header h2{ color:#2563eb; }
 
-/* PROGRESS */
 .progress{
   height:8px;
   background:#eee;
@@ -68,7 +61,6 @@ body{
   background:linear-gradient(90deg,#22c55e,#4ade80);
 }
 
-/* CHAT */
 .chat{
   flex:1;
   margin-top:15px;
@@ -85,16 +77,12 @@ body{
   line-height:1.4;
 }
 
-.teacher{
-  background:#e0f2fe;
-}
-
+.teacher{ background:#e0f2fe; }
 .student{
   background:#d1fae5;
   align-self:flex-end;
 }
 
-/* INPUT AREA */
 .input-area{
   display:flex;
   gap:10px;
@@ -118,7 +106,6 @@ button{
   cursor:pointer;
 }
 
-/* RIGHT SIDE */
 .right{
   background:#f9fafb;
   padding:20px;
@@ -128,10 +115,7 @@ button{
   gap:20px;
 }
 
-/* TEACHER */
-.teacher-box{
-  text-align:center;
-}
+.teacher-box{text-align:center;}
 
 .avatar{
   width:70px;
@@ -141,11 +125,6 @@ button{
   margin:auto;
 }
 
-.teacher-box h3{
-  margin-top:10px;
-}
-
-/* SUBJECTS */
 .subjects{
   display:flex;
   flex-wrap:wrap;
@@ -160,25 +139,16 @@ button{
   font-size:12px;
 }
 
-/* STATS */
-.stat{
-  font-size:14px;
-}
+.stat{font-size:14px;}
 
-/* BUTTON */
 .dashboard-btn{
   margin-top:auto;
   background:#22c55e;
 }
 
-/* MOBILE */
 @media(max-width:900px){
-  .container{
-    grid-template-columns:1fr;
-  }
-  .right{
-    display:none;
-  }
+  .container{grid-template-columns:1fr;}
+  .right{display:none;}
 }
 </style>
 </head>
@@ -187,7 +157,6 @@ button{
 
 <div class="container">
 
-<!-- LEFT -->
 <div class="left">
 
 <div class="header">
@@ -207,7 +176,6 @@ button{
 
 </div>
 
-<!-- RIGHT -->
 <div class="right">
 
 <div class="teacher-box">
@@ -235,7 +203,9 @@ button{
 
 <script>
 
-/* LOAD DATA */
+/* =========================
+   LOAD DATA
+========================= */
 const name = localStorage.getItem("studentName") || "Student";
 let subject = localStorage.getItem("subject") || "General";
 let topic = localStorage.getItem("topic") || "Introduction";
@@ -243,7 +213,9 @@ let topic = localStorage.getItem("topic") || "Introduction";
 document.getElementById("title").innerText =
 `${subject} - ${topic}`;
 
-/* SUBJECT LIST */
+/* =========================
+   SUBJECT LIST
+========================= */
 const subjectList = [
 "Mathematics","English","Economics","Government","CRS",
 "Biology","Chemistry","Physics","ICT","Geography",
@@ -264,7 +236,9 @@ subjectList.forEach(s=>{
   subjectsDiv.appendChild(el);
 });
 
-/* XP */
+/* =========================
+   XP SYSTEM
+========================= */
 let xp = parseInt(localStorage.getItem("xp") || 0);
 
 function updateStats(){
@@ -274,40 +248,82 @@ function updateStats(){
 }
 updateStats();
 
-/* CHAT */
+/* =========================
+   CHAT SYSTEM
+========================= */
 const chat = document.getElementById("chat");
 
-function teacher(text){
-  chat.innerHTML += `<div class="msg teacher">${text}</div>`;
+function addMsg(text,type){
+  chat.innerHTML += `<div class="msg ${type}">${text}</div>`;
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* START LESSON */
-teacher(`Hello ${name}! 👋`);
-teacher(`Today we are learning ${topic} in ${subject}.`);
-teacher(`Let me break it down simply for you.`);
+/* =========================
+   START LESSON
+========================= */
+addMsg(`Hello ${name}! 👋`,"teacher");
+addMsg(`Today we are learning ${topic} in ${subject}.`,"teacher");
+addMsg(`Ask me anything and I will teach you step by step.`,"teacher");
 
-/* SEND */
-function send(){
+/* =========================
+   🔥 GROQ AI (FAST + FREE)
+========================= */
+
+/* =========================
+   🔐 GROQ API KEY (ADD IN RENDER ENV)
+========================= */
+const GROQ_API_KEY = "PUT_YOUR_KEY_HERE";
+
+async function send(){
+
   const input = document.getElementById("input");
   const text = input.value;
 
   if(!text) return;
 
-  chat.innerHTML += `<div class="msg student">${text}</div>`;
+  addMsg(text,"student");
+  input.value = "";
 
-  teacher("Great question! Here's a simple explanation...");
+  addMsg("Thinking... 🤔","teacher");
 
-  input.value="";
+  try {
+
+    const res = await fetch("https://YOUR-RENDER-URL.onrender.com/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text
+      })
+    });
+
+    const data = await res.json();
+
+    addMsg(data.reply || "No response from AI", "teacher");
+
+  } catch(err){
+    console.log(err);
+    addMsg("Error connecting to AI server.", "teacher");
+  }
 
   xp += 5;
   localStorage.setItem("xp",xp);
-
   updateStats();
+
   updateProgress();
 }
+  
+/* =========================
+   ENTER KEY SUPPORT
+========================= */
+document.getElementById("input").addEventListener("keypress", function(e){
+  if(e.key === "Enter") send();
+});
 
-/* PROGRESS */
+/* =========================
+   PROGRESS BAR
+========================= */
 let progress = 0;
 
 function updateProgress(){
@@ -315,7 +331,9 @@ function updateProgress(){
   document.getElementById("bar").style.width = progress+"%";
 }
 
-/* NAV */
+/* =========================
+   NAVIGATION
+========================= */
 function goDashboard(){
   window.location.href="dashboard.html";
 }
