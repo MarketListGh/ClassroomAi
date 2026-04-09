@@ -1,6 +1,261 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<title>ClassroomAI — Smart Learning</title>
+
+<style>
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --accent:#2563eb;
+  --success:#16a34a;
+  --muted:#6b7280;
+}
+
+*{box-sizing:border-box;font-family:Inter,system-ui;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#111827;
+}
+
+/* HEADER */
+header{
+  background:white;
+  padding:16px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.logo{
+  font-weight:800;
+  font-size:18px;
+}
+
+/* DASHBOARD */
+.dashboard{
+  display:flex;
+  gap:20px;
+}
+
+.badge{
+  background:#eef2ff;
+  padding:6px 10px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:13px;
+}
+
+/* LAYOUT */
+.wrap{
+  max-width:1100px;
+  margin:20px auto;
+  display:grid;
+  grid-template-columns:1fr 350px;
+  gap:20px;
+  padding:0 16px;
+}
+
+.card{
+  background:var(--card);
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* BOARD */
+.board{
+  background:#0f172a;
+  color:white;
+  border-radius:10px;
+  padding:18px;
+}
+
+/* BUTTONS */
+.btn{
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:10px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn.secondary{
+  background:white;
+  color:var(--accent);
+  border:1px solid var(--accent);
+}
+
+/* INPUT */
+.input{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  width:100%;
+}
+
+/* CHAT */
+.chat{
+  height:300px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.msg{
+  padding:10px;
+  border-radius:10px;
+  max-width:80%;
+}
+
+.teacher{
+  background:#ecfdf5;
+}
+
+.student{
+  background:#eff6ff;
+  align-self:flex-end;
+}
+
+/* PROGRESS */
+.progress{
+  height:8px;
+  background:#e5e7eb;
+  border-radius:6px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  background:var(--success);
+  width:0%;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🎓 ClassroomAI</div>
+
+  <div class="dashboard">
+    <div class="badge">🔥 Streak: <span id="streak">3</span></div>
+    <div class="badge">⭐ XP: <span id="xp">120</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- MAIN -->
+<section class="card">
+
+<div class="board">
+  <h2>👨🏾‍🏫 Mr. Kwame Mensah</h2>
+  <p>Your AI teacher. Clear, patient, and practical.</p>
+</div>
+
+<br>
+
+<input id="subject" class="input" placeholder="Enter subject (e.g. Economics)"/>
+
+<br><br>
+
+<button class="btn" onclick="startLesson()">Start Lesson</button>
+
+<br><br>
+
+<div>
+  <strong>📘 Current Lesson</strong>
+  <div id="lessonArea" class="chat"></div>
+</div>
+
+<br>
+
+<div>
+  <strong>📊 Progress</strong>
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
+
+</section>
+
+<!-- SIDEBAR -->
+<aside class="card">
+
+<strong>💬 Ask Teacher</strong>
+
+<div id="chatBox" class="chat"></div>
+
+<div style="display:flex;gap:8px;margin-top:10px">
+  <input id="chatInput" class="input"/>
+  <button class="btn" onclick="sendMsg()">Send</button>
+</div>
+
+</aside>
+
+</main>
+
+<script>
+let xp = 120;
+let streak = 3;
+let progress = 0;
+
+function addXP(amount){
+  xp += amount;
+  document.getElementById('xp').textContent = xp;
+}
+
+function updateProgress(){
+  progress += 20;
+  document.getElementById('progressBar').style.width = progress + "%";
+}
+
+function startLesson(){
+  const subject = document.getElementById('subject').value;
+
+  if(!subject){
+    alert("Enter a subject");
+    return;
+  }
+
+  const lesson = document.getElementById('lessonArea');
+
+  lesson.innerHTML += `<div class="msg teacher">Today we are learning ${subject}. Let's begin!</div>`;
+
+  addXP(10);
+  updateProgress();
+}
+
+function sendMsg(){
+  const input = document.getElementById('chatInput');
+  const text = input.value;
+
+  if(!text) return;
+
+  const chat = document.getElementById('chatBox');
+
+  chat.innerHTML += `<div class="msg student">${text}</div>`;
+  chat.innerHTML += `<div class="msg teacher">Good question! Think about it this way...</div>`;
+
+  input.value = "";
+}
+</script>
+  
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ClassroomAI — Mr. Kwame Mensah</title>
