@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lesson - ClassroomAI</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+body{
+  background:#f4f7fb;
+}
+
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  height:100vh;
+}
+
+/* LEFT - LESSON */
+.lesson{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.progress{
+  height:8px;
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#4ade80);
+}
+
+/* CHAT */
+.chat{
+  flex:1;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
+}
+
+.msg{
+  padding:12px;
+  border-radius:12px;
+  max-width:75%;
+}
+
+.teacher{
+  background:#e0f2fe;
+}
+
+.student{
+  background:#d1fae5;
+  align-self:flex-end;
+}
+
+/* INPUT */
+.input-area{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+input{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+
+button{
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* RIGHT PANEL */
+.sidebar{
+  background:white;
+  padding:20px;
+  border-left:1px solid #eee;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* TEACHER */
+.teacher-box{
+  text-align:center;
+}
+
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  margin:auto;
+}
+
+/* SUBJECT LIST */
+.subjects{
+  max-height:200px;
+  overflow:auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.subject{
+  background:#f1f5f9;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* STATS */
+.stat{
+  font-size:14px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .container{
+    grid-template-columns:1fr;
+  }
+  .sidebar{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LEFT -->
+<div class="lesson">
+
+<div class="header">
+  <div class="title" id="lessonTitle"></div>
+</div>
+
+<div class="progress">
+  <div id="progressBar" class="progress-bar"></div>
+</div>
+
+<div id="chat" class="chat"></div>
+
+<div class="input-area">
+  <input id="input" placeholder="Ask your teacher...">
+  <button onclick="send()">Send</button>
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="sidebar">
+
+<div class="teacher-box">
+  <div class="avatar"></div>
+  <h3>Mr. Kwame Mensah</h3>
+  <small>AI Teacher</small>
+</div>
+
+<div>
+  <h4>📚 Subjects</h4>
+  <div class="subjects" id="subjects"></div>
+</div>
+
+<div>
+  <h4>📊 Stats</h4>
+  <div class="stat">XP: <span id="xp"></span></div>
+  <div class="stat">Level: <span id="level"></span></div>
+</div>
+
+<button onclick="goDashboard()">Go to Dashboard</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* LOAD DATA */
+const name = localStorage.getItem("studentName") || "Student";
+let subject = localStorage.getItem("subject") || "General";
+let topic = localStorage.getItem("topic") || "Introduction";
+
+document.getElementById("lessonTitle").innerText =
+`${subject} - ${topic}`;
+
+/* SUBJECT LIST */
+const subjectList = [
+"Mathematics","English","Economics","Government","CRS",
+"Biology","Chemistry","Physics","ICT","Geography",
+"Literature","Business","Accounting","Marketing",
+"Entrepreneurship","Statistics","History","Sociology"
+];
+
+const subjectsDiv = document.getElementById("subjects");
+
+subjectList.forEach(s=>{
+  const el = document.createElement("div");
+  el.className="subject";
+  el.innerText=s;
+  el.onclick=()=>{
+    subject = s;
+    localStorage.setItem("subject",s);
+    location.reload();
+  };
+  subjectsDiv.appendChild(el);
+});
+
+/* XP SYSTEM */
+let xp = parseInt(localStorage.getItem("xp") || 0);
+
+function updateStats(){
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("level").innerText =
+  Math.floor(xp/50)+1;
+}
+updateStats();
+
+/* CHAT SYSTEM */
+const chat = document.getElementById("chat");
+
+function teacherReply(text){
+  chat.innerHTML += `<div class="msg teacher">${text}</div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* AUTO LESSON */
+function startLesson(){
+  teacherReply(`Hello ${name}! Today we are learning ${topic} in ${subject}.`);
+  teacherReply(`Let me explain it step by step in a simple way.`);
+  teacherReply(`First, ${topic} means...`);
+}
+startLesson();
+
+/* SEND MESSAGE */
+function send(){
+  const input = document.getElementById("input");
+  const text = input.value;
+
+  if(!text) return;
+
+  chat.innerHTML += `<div class="msg student">${text}</div>`;
+
+  teacherReply("Great question! Think of it like this...");
+  
+  input.value="";
+
+  xp += 5;
+  localStorage.setItem("xp",xp);
+  updateStats();
+  updateProgress();
+}
+
+/* PROGRESS */
+let progress = 0;
+
+function updateProgress(){
+  progress += 10;
+  document.getElementById("progressBar").style.width = progress+"%";
+}
+
+/* NAVIGATION */
+function goDashboard(){
+  window.location.href="dashboard.html";
+}
+
+</script>
+
+</body>
+</html>
