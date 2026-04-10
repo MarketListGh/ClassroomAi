@@ -266,14 +266,8 @@ addMsg(`Today we are learning ${topic} in ${subject}.`,"teacher");
 addMsg(`Ask me anything and I will teach you step by step.`,"teacher");
 
 /* =========================
-   🔥 GROQ AI (FAST + FREE)
+   🔥 AI REQUEST (BACKEND)
 ========================= */
-
-/* =========================
-   🔐 GROQ API KEY (ADD IN RENDER ENV)
-========================= */
-const GROQ_API_KEY = "PUT_YOUR_KEY_HERE";
-
 async function send(){
 
   const input = document.getElementById("input");
@@ -288,7 +282,7 @@ async function send(){
 
   try {
 
-    const res = await fetch("https://YOUR-RENDER-URL.onrender.com/chat", {
+    const res = await fetch("https://classroomai-2.onrender.com/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -300,7 +294,7 @@ async function send(){
 
     const data = await res.json();
 
-    addMsg(data.reply || "No response from AI", "teacher");
+    addMsg(data.reply || "No response", "teacher");
 
   } catch(err){
     console.log(err);
@@ -310,7 +304,6 @@ async function send(){
   xp += 5;
   localStorage.setItem("xp",xp);
   updateStats();
-
   updateProgress();
 }
   
