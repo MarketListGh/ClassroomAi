@@ -30,22 +30,19 @@ app.post("/chat", async (req, res) => {
           "Authorization": "Bearer " + GROQ_API_KEY,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          model: "llama3-8b-8192",
-          messages: [
-            {
-              role: "system",
-              content: "You are a friendly Ghanaian classroom teacher. Teach step-by-step in simple English with examples."
-            },
-            {
-              role: "user",
-              content: userMessage
-            }
-          ]
-        })
-      }
-    );
-
+       body: JSON.stringify({
+  model: "llama3-70b-8192",
+  messages: [
+    {
+      role: "system",
+      content: "You are a friendly Ghanaian classroom teacher. Teach step-by-step in simple English with examples."
+    },
+    {
+      role: "user",
+      content: userMessage
+    }
+  ]
+})
     const data = await response.json();
 
     console.log("GROQ RESPONSE:", JSON.stringify(data, null, 2));
