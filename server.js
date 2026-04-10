@@ -48,9 +48,17 @@ app.post("/chat", async (req, res) => {
 
     const data = await response.json();
 
-    const reply =
-      data?.choices?.[0]?.message?.content ||
-      "Sorry, I couldn't respond.";
+    console.log("GROQ RESPONSE:", JSON.stringify(data, null, 2));
+
+    let reply;
+
+    if (data.error) {
+      reply = "API Error: " + data.error.message;
+    } else if (data?.choices?.[0]?.message?.content) {
+      reply = data.choices[0].message.content;
+    } else {
+      reply = "No valid response from AI.";
+    }
 
     res.json({ reply });
 
